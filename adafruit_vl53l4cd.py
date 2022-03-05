@@ -284,8 +284,8 @@ class VL53L4CD:
     @property
     def inter_measurement(self):
         """
-        Inter-measurement period in milliseconds. Valid range is `timing_budget` to
-        5000ms, or `0` to disable.
+        Inter-measurement period in milliseconds. Valid range is timing_budget to
+        5000ms, or 0 to disable.
         """
         reg_val = struct.unpack(
             ">I", self._read_register(_VL53L4CD_INTERMEASUREMENT_MS, 4)
