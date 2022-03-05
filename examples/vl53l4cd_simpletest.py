@@ -10,7 +10,6 @@
 # Simple demo of the VL53L1X distance sensor.
 # Will print the sensed range/distance every second.
 
-import time
 import board
 import adafruit_vl53l4cd
 
