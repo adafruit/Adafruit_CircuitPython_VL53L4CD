@@ -56,7 +56,6 @@ setup(
     ],
     # What does your project relate to?
     keywords="adafruit blinka circuitpython micropython vl53l4cd distance",
-
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     # TODO: IF LIBRARY FILES ARE A PACKAGE FOLDER,
