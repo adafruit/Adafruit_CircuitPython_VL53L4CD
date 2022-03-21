@@ -7,7 +7,7 @@
 #
 # SPDX-License-Identifier: Unlicense
 
-# Simple demo of the VL53L1X distance sensor.
+# Simple demo of the VL53L4CD distance sensor.
 # Will print the sensed range/distance every second.
 
 import board
@@ -21,7 +21,7 @@ vl53 = adafruit_vl53l4cd.VL53L4CD(i2c)
 vl53.inter_measurement = 0
 vl53.timing_budget = 200
 
-print("VL53L14CD Simple Test.")
+print("VL53L4CD Simple Test.")
 print("--------------------")
 model_id, module_type = vl53.model_info
 print("Model ID: 0x{:0X}".format(model_id))
