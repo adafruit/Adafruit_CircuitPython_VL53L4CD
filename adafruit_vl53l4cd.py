@@ -71,6 +71,7 @@ class VL53L4CD:
     """Driver for the VL53L4CD distance sensor."""
 
     def __init__(self, i2c, address=41):
+        self._i2c = i2c
         self.i2c_device = i2c_device.I2CDevice(i2c, address)
         model_id, module_type = self.model_info
         if model_id != 0xEB or module_type != 0xAA:
@@ -394,3 +395,14 @@ class VL53L4CD:
             i2c.write(struct.pack(">H", address))
             i2c.readinto(data)
         return data
+
+    def set_address(self, new_address):
+        """
+        Set a new I2C address to the instantaited object. This is only called when using
+        multiple VL53L4CD sensors on the same I2C bus (SDA & SCL pins). See also the
+        `example <examples.html#id2>`_ for proper usage.
+        """
+        self._write_register(
+            _VL53L4CD_I2C_SLAVE_DEVICE_ADDRESS, struct.pack(">B", new_address)
+        )
+        self.i2c_device = i2c_device.I2CDevice(self._i2c, new_address)
