@@ -30,7 +30,7 @@ import struct
 from adafruit_bus_device import i2c_device
 from micropython import const
 
-__version__ = "0.0.0-auto.0"
+__version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_VL53L4CD.git"
 
 _VL53L4CD_SOFT_RESET = const(0x0000)

@@ -12,7 +12,7 @@ requires = [
 [project]
 name = "adafruit-circuitpython-vl53l4cd"
 description = "CircuitPython helper library for the VL53L4CD time of flight distance sensor."
-version = "0.0.0-auto.0"
+version = "0.0.0+auto.0"
 readme = "README.rst"
 authors = [
     {name = "Adafruit Industries", email = "circuitpython@adafruit.com"}
