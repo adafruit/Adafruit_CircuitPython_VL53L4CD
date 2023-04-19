@@ -200,6 +200,32 @@ class VL53L4CD:
         return dist / 10
 
     @property
+    def range_status(self):
+        """Measurement validity. Returns a number between 0 to 255 where:
+        0 - None - Returned distance is valid
+        1 - Warning - Sigma is above the defined threshold
+        2 - Warning - Signal is below the defined threshold
+        3 - Error - Measured distance is below detection threshold
+        4 - Error - Phase out of valid limit
+        5 - Error - Hardware fail
+        6 - Warning - Phase valid but no wrap around check performed
+        7 - Error - Wrapped target, phase does not match
+        8 - Error - Processing fail
+        9 - Error - Crosstalk signal fail
+        10 - Error - Interrupt error
+        11 - Error - Merged target
+        12 - Error - Signal is too low
+        255 - Error - Other error (for example, boot error)
+        """
+        status_rtn = [255, 255, 255, 5, 2, 4, 1, 7, 3, 0, 255, 255, 9, 13, 255, 255, 255, 255, 10, 6, 255, 255, 11, 12]
+        status = self._read_register(_VL53L4CD_RESULT_RANGE_STATUS, 1)
+        status = struct.unpack(">B", status)[0]
+        status = status & 0x1F
+        if status < 24:
+            status = status_rtn[status]
+        return status
+
+    @property
     def timing_budget(self):
         """Ranging duration in milliseconds. Valid range is 10ms to 200ms."""
         osc_freq = struct.unpack(">H", self._read_register(0x0006, 2))[0]
