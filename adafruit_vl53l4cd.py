@@ -226,6 +226,13 @@ class VL53L4CD:
         return status
 
     @property
+    def sigma(self):
+        """Sigma estimator for the noise in the reported target distance in units of centimeters."""
+        sigma = self._read_register(_VL53L4CD_RESULT_SIGMA, 2)
+        sigma = struct.unpack(">H", sigma)[0]
+        return sigma / 40
+
+    @property
     def timing_budget(self):
         """Ranging duration in milliseconds. Valid range is 10ms to 200ms."""
         osc_freq = struct.unpack(">H", self._read_register(0x0006, 2))[0]
