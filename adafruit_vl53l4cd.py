@@ -217,7 +217,32 @@ class VL53L4CD:
         12 - Error - Signal is too low
         255 - Error - Other error (for example, boot error)
         """
-        status_rtn = [255, 255, 255, 5, 2, 4, 1, 7, 3, 0, 255, 255, 9, 13, 255, 255, 255, 255, 10, 6, 255, 255, 11, 12]
+        status_rtn = [
+            255,
+            255,
+            255,
+            5,
+            2,
+            4,
+            1,
+            7,
+            3,
+            0,
+            255,
+            255,
+            9,
+            13,
+            255,
+            255,
+            255,
+            255,
+            10,
+            6,
+            255,
+            255,
+            11,
+            12,
+        ]
         status = self._read_register(_VL53L4CD_RESULT_RANGE_STATUS, 1)
         status = struct.unpack(">B", status)[0]
         status = status & 0x1F
