@@ -66,6 +66,21 @@ _VL53L4CD_RESULT_OSC_CALIBRATE_VAL = const(0x00DE)
 _VL53L4CD_FIRMWARE_SYSTEM_STATUS = const(0x00E5)
 _VL53L4CD_IDENTIFICATION_MODEL_ID = const(0x010F)
 
+_VL53L4CD_RANGE_VALID = const(0x00)
+_VL53L4CD_RANGE_WARN_SIGMA_ABOVE_THRESHOLD = const(0x01)
+_VL53L4CD_RANGE_WARN_SIGMA_BELOW_THRESHOLD = const(0x02)
+_VL53L4CD_RANGE_ERROR_DISTANCE_BELOW_DETECTION_THRESHOLD = const(0x03)
+_VL53L4CD_RANGE_ERROR_INVALID_PHASE = const(0x04)
+_VL53L4CD_RANGE_ERROR_HW_FAIL = const(0x05)
+_VL53L4CD_RANGE_WARN_NO_WRAP_AROUND_CHECK = const(0x06)
+_VL53L4CD_RANGE_ERROR_WRAPPED_TARGET_PHASE_MISMATCH = const(0x07)
+_VL53L4CD_RANGE_ERROR_PROCESSING_FAIL = const(0x08)
+_VL53L4CD_RANGE_ERROR_CROSSTALK_FAIL = const(0x09)
+_VL53L4CD_RANGE_ERROR_INTERRUPT = const(0x0A)
+_VL53L4CD_RANGE_ERROR_MERGED_TARGET = const(0x0B)
+_VL53L4CD_RANGE_ERROR_SIGNAL_TOO_WEAK = const(0x0C)
+_VL53L4CD_RANGE_ERROR_OTHER = const(0xFF)
+
 
 class VL53L4CD:
     """Driver for the VL53L4CD distance sensor."""
@@ -201,53 +216,40 @@ class VL53L4CD:
 
     @property
     def range_status(self):
-        """Measurement validity. Returns a number between 0 to 255 where:
-        0 - None - Returned distance is valid
-        1 - Warning - Sigma is above the defined threshold
-        2 - Warning - Signal is below the defined threshold
-        3 - Error - Measured distance is below detection threshold
-        4 - Error - Phase out of valid limit
-        5 - Error - Hardware fail
-        6 - Warning - Phase valid but no wrap around check performed
-        7 - Error - Wrapped target, phase does not match
-        8 - Error - Processing fail
-        9 - Error - Crosstalk signal fail
-        10 - Error - Interrupt error
-        11 - Error - Merged target
-        12 - Error - Signal is too low
-        255 - Error - Other error (for example, boot error)
-        """
+        """Measurement validity. If the range status is equal to 0, the distance is valid."""
         status_rtn = [
-            255,
-            255,
-            255,
-            5,
-            2,
-            4,
-            1,
-            7,
-            3,
-            0,
-            255,
-            255,
-            9,
-            13,
-            255,
-            255,
-            255,
-            255,
-            10,
-            6,
-            255,
-            255,
-            11,
-            12,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_HW_FAIL,
+            _VL53L4CD_RANGE_WARN_SIGMA_BELOW_THRESHOLD,
+            _VL53L4CD_RANGE_ERROR_INVALID_PHASE,
+            _VL53L4CD_RANGE_WARN_SIGMA_ABOVE_THRESHOLD,
+            _VL53L4CD_RANGE_ERROR_WRAPPED_TARGET_PHASE_MISMATCH,
+            _VL53L4CD_RANGE_ERROR_DISTANCE_BELOW_DETECTION_THRESHOLD,
+            _VL53L4CD_RANGE_VALID,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_CROSSTALK_FAIL,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_INTERRUPT,
+            _VL53L4CD_RANGE_WARN_NO_WRAP_AROUND_CHECK,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_OTHER,
+            _VL53L4CD_RANGE_ERROR_MERGED_TARGET,
+            _VL53L4CD_RANGE_ERROR_SIGNAL_TOO_WEAK,
         ]
         status = self._read_register(_VL53L4CD_RESULT_RANGE_STATUS, 1)
         status = struct.unpack(">B", status)[0]
         status = status & 0x1F
         if status < 24:
             status = status_rtn[status]
+        else:
+            status = _VL53L4CD_RANGE_ERROR_OTHER
         return status
 
     @property
