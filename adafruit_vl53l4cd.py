@@ -66,6 +66,21 @@ _VL53L4CD_RESULT_OSC_CALIBRATE_VAL = const(0x00DE)
 _VL53L4CD_FIRMWARE_SYSTEM_STATUS = const(0x00E5)
 _VL53L4CD_IDENTIFICATION_MODEL_ID = const(0x010F)
 
+RANGE_VALID = const(0x00)
+RANGE_WARN_SIGMA_ABOVE = const(0x01)
+RANGE_WARN_SIGMA_BELOW = const(0x02)
+RANGE_ERROR_DISTANCE_BELOW_DETECTION_THRESHOLD = const(0x03)
+RANGE_ERROR_INVALID_PHASE = const(0x04)
+RANGE_ERROR_HW_FAIL = const(0x05)
+RANGE_WARN_NO_WRAP_AROUND_CHECK = const(0x06)
+RANGE_ERROR_WRAPPED_TARGET_PHASE_MISMATCH = const(0x07)
+RANGE_ERROR_PROCESSING_FAIL = const(0x08)
+RANGE_ERROR_CROSSTALK_FAIL = const(0x09)
+RANGE_ERROR_INTERRUPT = const(0x0A)
+RANGE_ERROR_MERGED_TARGET = const(0x0B)
+RANGE_ERROR_SIGNAL_TOO_WEAK = const(0x0C)
+RANGE_ERROR_OTHER = const(0xFF)
+
 
 class VL53L4CD:
     """Driver for the VL53L4CD distance sensor."""
@@ -198,6 +213,51 @@ class VL53L4CD:
         dist = self._read_register(_VL53L4CD_RESULT_DISTANCE, 2)
         dist = struct.unpack(">H", dist)[0]
         return dist / 10
+
+    @property
+    def range_status(self):
+        """Measurement validity. If the range status is equal to 0, the distance is valid."""
+        status_rtn = [
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_HW_FAIL,
+            RANGE_WARN_SIGMA_BELOW,
+            RANGE_ERROR_INVALID_PHASE,
+            RANGE_WARN_SIGMA_ABOVE,
+            RANGE_ERROR_WRAPPED_TARGET_PHASE_MISMATCH,
+            RANGE_ERROR_DISTANCE_BELOW_DETECTION_THRESHOLD,
+            RANGE_VALID,
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_CROSSTALK_FAIL,
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_INTERRUPT,
+            RANGE_WARN_NO_WRAP_AROUND_CHECK,
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_OTHER,
+            RANGE_ERROR_MERGED_TARGET,
+            RANGE_ERROR_SIGNAL_TOO_WEAK,
+        ]
+        status = self._read_register(_VL53L4CD_RESULT_RANGE_STATUS, 1)
+        status = struct.unpack(">B", status)[0]
+        status = status & 0x1F
+        if status < 24:
+            status = status_rtn[status]
+        else:
+            status = RANGE_ERROR_OTHER
+        return status
+
+    @property
+    def sigma(self):
+        """Sigma estimator for the noise in the reported target distance in units of centimeters."""
+        sigma = self._read_register(_VL53L4CD_RESULT_SIGMA, 2)
+        sigma = struct.unpack(">H", sigma)[0]
+        return sigma / 40
 
     @property
     def timing_budget(self):
