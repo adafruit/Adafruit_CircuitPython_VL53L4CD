@@ -84,7 +84,7 @@ following command to install:
 
 .. code-block:: shell
 
-    circup install vl53l4cd
+    circup install adafruit_vl53l4cd
 
 Or the following command to update an existing version:
 
