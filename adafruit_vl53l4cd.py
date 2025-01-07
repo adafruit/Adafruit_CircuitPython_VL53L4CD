@@ -325,7 +325,7 @@ class VL53L4CD:
         timing_budget_us <<= 12
         tmp = macro_period_us * 16
         ls_byte = int(((timing_budget_us + ((tmp >> 6) >> 1)) / (tmp >> 6)) - 1)
-        while ls_byte >> 8 & 0xFFFFFF > 0:
+        while ls_byte >> (8 & 0xFFFFFF) > 0:
             ls_byte >>= 1
             ms_byte += 1
         ms_byte = (ms_byte << 8) + (ls_byte & 0xFF)
@@ -335,7 +335,7 @@ class VL53L4CD:
         ms_byte = 0
         tmp = macro_period_us * 12
         ls_byte = int(((timing_budget_us + ((tmp >> 6) >> 1)) / (tmp >> 6)) - 1)
-        while ls_byte >> 8 & 0xFFFFFF > 0:
+        while ls_byte >> (8 & 0xFFFFFF) > 0:
             ls_byte >>= 1
             ms_byte += 1
         ms_byte = (ms_byte << 8) + (ls_byte & 0xFF)
