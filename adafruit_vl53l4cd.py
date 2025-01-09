@@ -264,7 +264,7 @@ class VL53L4CD:
         """Ranging duration in milliseconds. Valid range is 10ms to 200ms."""
         osc_freq = struct.unpack(">H", self._read_register(0x0006, 2))[0]
 
-        macro_period_us = 16 * (int(2304 * (0x40000000 / osc_freq)) >> 6)
+        macro_period_us = 16 * (int(2304 * (1073741824.0 / osc_freq)) >> 6)
 
         macrop_high = struct.unpack(
             ">H", self._read_register(_VL53L4CD_RANGE_CONFIG_A, 2)
@@ -310,7 +310,7 @@ class VL53L4CD:
             raise RuntimeError("Osc frequency is 0.")
 
         timing_budget_us = val * 1000
-        macro_period_us = int(2304 * (0x40000000 / osc_freq)) >> 6
+        macro_period_us = int(2304 * (1073741824.0 / osc_freq)) >> 6
 
         if inter_meas == 0:
             # continuous mode
@@ -325,7 +325,7 @@ class VL53L4CD:
         timing_budget_us <<= 12
         tmp = macro_period_us * 16
         ls_byte = int(((timing_budget_us + ((tmp >> 6) >> 1)) / (tmp >> 6)) - 1)
-        while ls_byte & 0xFFFFFF00 > 0:
+        while (ls_byte >> 8) & 0xFFFFFF > 0:
             ls_byte >>= 1
             ms_byte += 1
         ms_byte = (ms_byte << 8) + (ls_byte & 0xFF)
@@ -335,7 +335,7 @@ class VL53L4CD:
         ms_byte = 0
         tmp = macro_period_us * 12
         ls_byte = int(((timing_budget_us + ((tmp >> 6) >> 1)) / (tmp >> 6)) - 1)
-        while ls_byte & 0xFFFFFF00 > 0:
+        while (ls_byte >> 8) & 0xFFFFFF > 0:
             ls_byte >>= 1
             ms_byte += 1
         ms_byte = (ms_byte << 8) + (ls_byte & 0xFF)
