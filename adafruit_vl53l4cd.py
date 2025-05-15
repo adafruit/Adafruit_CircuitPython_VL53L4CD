@@ -25,8 +25,9 @@ Implementation Notes
 * Adafruit's Bus Device library: https://github.com/adafruit/Adafruit_CircuitPython_BusDevice
 """
 
-import time
 import struct
+import time
+
 from adafruit_bus_device import i2c_device
 from micropython import const
 
@@ -95,13 +96,12 @@ class VL53L4CD:
         self._sensor_init()
 
     def _sensor_init(self):
-        # pylint: disable=line-too-long
         init_seq = (
             # value    addr : description
             b"\x12"  # 0x2d : set bit 2 and 5 to 1 for fast plus mode (1MHz I2C), else don't touch
             b"\x00"  # 0x2e : bit 0 if I2C pulled up at 1.8V, else set bit 0 to 1 (pull up at AVDD)
             b"\x00"  # 0x2f : bit 0 if GPIO pulled up at 1.8V, else set bit 0 to 1 (pull up at AVDD)
-            b"\x11"  # 0x30 : set bit 4 to 0 for active high interrupt and 1 for active low (bits 3:0 must be 0x1)
+            b"\x11"  # 0x30 : set bit 4 to 0 for active high interrupt and 1 for active low (bits 3:0 must be 0x1)  # noqa: E501
             b"\x02"  # 0x31 : bit 1 = interrupt depending on the polarity
             b"\x00"  # 0x32 : not user-modifiable
             b"\x02"  # 0x33 : not user-modifiable
@@ -115,16 +115,16 @@ class VL53L4CD:
             b"\x00"  # 0x3b : not user-modifiable
             b"\x00"  # 0x3c : not user-modifiable
             b"\x00"  # 0x3d : not user-modifiable
-            b"\xFF"  # 0x3e : not user-modifiable
+            b"\xff"  # 0x3e : not user-modifiable
             b"\x00"  # 0x3f : not user-modifiable
-            b"\x0F"  # 0x40 : not user-modifiable
+            b"\x0f"  # 0x40 : not user-modifiable
             b"\x00"  # 0x41 : not user-modifiable
             b"\x00"  # 0x42 : not user-modifiable
             b"\x00"  # 0x43 : not user-modifiable
             b"\x00"  # 0x44 : not user-modifiable
             b"\x00"  # 0x45 : not user-modifiable
-            b"\x20"  # 0x46 : interrupt configuration 0->level low detection, 1-> level high, 2-> Out of window, 3->In window, 0x20-> New sample ready , TBC
-            b"\x0B"  # 0x47 : not user-modifiable
+            b"\x20"  # 0x46 : interrupt configuration 0->level low detection, 1-> level high, 2-> Out of window, 3->In window, 0x20-> New sample ready , TBC  # noqa: E501
+            b"\x0b"  # 0x47 : not user-modifiable
             b"\x00"  # 0x48 : not user-modifiable
             b"\x00"  # 0x49 : not user-modifiable
             b"\x02"  # 0x4a : not user-modifiable
@@ -137,24 +137,24 @@ class VL53L4CD:
             b"\x00"  # 0x51 : not user-modifiable
             b"\x00"  # 0x52 : not user-modifiable
             b"\x00"  # 0x53 : not user-modifiable
-            b"\xC8"  # 0x54 : not user-modifiable
+            b"\xc8"  # 0x54 : not user-modifiable
             b"\x00"  # 0x55 : not user-modifiable
             b"\x00"  # 0x56 : not user-modifiable
             b"\x38"  # 0x57 : not user-modifiable
-            b"\xFF"  # 0x58 : not user-modifiable
+            b"\xff"  # 0x58 : not user-modifiable
             b"\x01"  # 0x59 : not user-modifiable
             b"\x00"  # 0x5a : not user-modifiable
             b"\x08"  # 0x5b : not user-modifiable
             b"\x00"  # 0x5c : not user-modifiable
             b"\x00"  # 0x5d : not user-modifiable
             b"\x01"  # 0x5e : not user-modifiable
-            b"\xCC"  # 0x5f : not user-modifiable
+            b"\xcc"  # 0x5f : not user-modifiable
             b"\x07"  # 0x60 : not user-modifiable
             b"\x01"  # 0x61 : not user-modifiable
-            b"\xF1"  # 0x62 : not user-modifiable
+            b"\xf1"  # 0x62 : not user-modifiable
             b"\x05"  # 0x63 : not user-modifiable
-            b"\x00"  # 0x64 : Sigma threshold MSB (mm in 14.2 format for MSB+LSB), default value 90 mm
-            b"\xA0"  # 0x65 : Sigma threshold LSB
+            b"\x00"  # 0x64 : Sigma threshold MSB (mm in 14.2 format for MSB+LSB), default value 90 mm  # noqa: E501
+            b"\xa0"  # 0x65 : Sigma threshold LSB
             b"\x00"  # 0x66 : Min count Rate MSB (MCPS in 9.7 format for MSB+LSB)
             b"\x80"  # 0x67 : Min count Rate LSB
             b"\x08"  # 0x68 : not user-modifiable
@@ -163,7 +163,7 @@ class VL53L4CD:
             b"\x00"  # 0x6b : not user-modifiable
             b"\x00"  # 0x6c : Intermeasurement period MSB, 32 bits register
             b"\x00"  # 0x6d : Intermeasurement period
-            b"\x0F"  # 0x6e : Intermeasurement period
+            b"\x0f"  # 0x6e : Intermeasurement period
             b"\x89"  # 0x6f : Intermeasurement period LSB
             b"\x00"  # 0x70 : not user-modifiable
             b"\x00"  # 0x71 : not user-modifiable
@@ -180,9 +180,9 @@ class VL53L4CD:
             b"\x00"  # 0x7c : not user-modifiable
             b"\x00"  # 0x7d : not user-modifiable
             b"\x02"  # 0x7e : not user-modifiable
-            b"\xC7"  # 0x7f : not user-modifiable
-            b"\xFF"  # 0x80 : not user-modifiable
-            b"\x9B"  # 0x81 : not user-modifiable
+            b"\xc7"  # 0x7f : not user-modifiable
+            b"\xff"  # 0x80 : not user-modifiable
+            b"\x9b"  # 0x81 : not user-modifiable
             b"\x00"  # 0x82 : not user-modifiable
             b"\x00"  # 0x83 : not user-modifiable
             b"\x00"  # 0x84 : not user-modifiable
@@ -266,9 +266,7 @@ class VL53L4CD:
 
         macro_period_us = 16 * (int(2304 * (1073741824.0 / osc_freq)) >> 6)
 
-        macrop_high = struct.unpack(
-            ">H", self._read_register(_VL53L4CD_RANGE_CONFIG_A, 2)
-        )[0]
+        macrop_high = struct.unpack(">H", self._read_register(_VL53L4CD_RANGE_CONFIG_A, 2))[0]
 
         ls_byte = (macrop_high & 0x00FF) << 4
         ms_byte = (macrop_high & 0xFF00) >> 8
@@ -300,9 +298,7 @@ class VL53L4CD:
         inter_meas = self.inter_measurement
         if inter_meas != 0 and val > inter_meas:
             raise ValueError(
-                "Timing budget can not be greater than inter-measurement period ({})".format(
-                    inter_meas
-                )
+                f"Timing budget can not be greater than inter-measurement period ({inter_meas})"
             )
 
         osc_freq = struct.unpack(">H", self._read_register(0x0006, 2))[0]
@@ -347,12 +343,10 @@ class VL53L4CD:
         Inter-measurement period in milliseconds. Valid range is timing_budget to
         5000ms, or 0 to disable.
         """
-        reg_val = struct.unpack(
-            ">I", self._read_register(_VL53L4CD_INTERMEASUREMENT_MS, 4)
-        )[0]
-        clock_pll = struct.unpack(
-            ">H", self._read_register(_VL53L4CD_RESULT_OSC_CALIBRATE_VAL, 2)
-        )[0]
+        reg_val = struct.unpack(">I", self._read_register(_VL53L4CD_INTERMEASUREMENT_MS, 4))[0]
+        clock_pll = struct.unpack(">H", self._read_register(_VL53L4CD_RESULT_OSC_CALIBRATE_VAL, 2))[
+            0
+        ]
         clock_pll &= 0x3FF
         clock_pll = int(1.065 * clock_pll)
         return int(reg_val / clock_pll)
@@ -365,14 +359,12 @@ class VL53L4CD:
         timing_bud = self.timing_budget
         if val != 0 and val < timing_bud:
             raise ValueError(
-                "Inter-measurement period can not be less than timing budget ({})".format(
-                    timing_bud
-                )
+                f"Inter-measurement period can not be less than timing budget ({timing_bud})"
             )
 
-        clock_pll = struct.unpack(
-            ">H", self._read_register(_VL53L4CD_RESULT_OSC_CALIBRATE_VAL, 2)
-        )[0]
+        clock_pll = struct.unpack(">H", self._read_register(_VL53L4CD_RESULT_OSC_CALIBRATE_VAL, 2))[
+            0
+        ]
         clock_pll &= 0x3FF
         int_meas = int(1.055 * val * clock_pll)
         self._write_register(_VL53L4CD_INTERMEASUREMENT_MS, struct.pack(">I", int_meas))
@@ -415,10 +407,7 @@ class VL53L4CD:
     @property
     def data_ready(self):
         """Returns true if new data is ready, otherwise false."""
-        if (
-            self._read_register(_VL53L4CD_GPIO_TIO_HV_STATUS)[0] & 0x01
-            == self._interrupt_polarity
-        ):
+        if self._read_register(_VL53L4CD_GPIO_TIO_HV_STATUS)[0] & 0x01 == self._interrupt_polarity:
             return True
         return False
 
@@ -462,7 +451,5 @@ class VL53L4CD:
         multiple VL53L4CD sensors on the same I2C bus (SDA & SCL pins). See also the
         `example <examples.html#id2>`_ for proper usage.
         """
-        self._write_register(
-            _VL53L4CD_I2C_SLAVE_DEVICE_ADDRESS, struct.pack(">B", new_address)
-        )
+        self._write_register(_VL53L4CD_I2C_SLAVE_DEVICE_ADDRESS, struct.pack(">B", new_address))
         self.i2c_device = i2c_device.I2CDevice(self._i2c, new_address)
