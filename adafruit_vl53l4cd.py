@@ -245,7 +245,7 @@ class VL53L4CD:
         ]
         status = self._read_register(_VL53L4CD_RESULT_RANGE_STATUS, 1)
         status = struct.unpack(">B", status)[0]
-        status = status & 0x1F
+        status &= 0x1F
         if status < 24:
             status = status_rtn[status]
         else:
